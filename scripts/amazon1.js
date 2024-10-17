@@ -659,5 +659,111 @@ const products = [
   }
 ];
 
+let products_grid = document.querySelector('.products-grid');
 
-export default products;
+products.forEach((product, i) => {
+  // Create a new product container for each product
+  let product_container = document.createElement('div');
+  product_container.className = 'product-container';
+
+  // Div1: Product Image Container
+  let product_image_container = document.createElement('div');
+  product_image_container.className = 'product-image-container';
+
+  let product_image = document.createElement('img');
+  product_image.src = product.image;
+  product_image.alt = product.name; // Add alt text for better accessibility
+  product_image.className = 'product-image'; // Add class for styling
+  product_image_container.appendChild(product_image);
+
+  // Div2: Product Name
+  let product_name = document.createElement('div');
+  product_name.className = "product-name limit-text-to-2-lines";
+  product_name.innerHTML = product.name; // Access product name directly
+
+  // Div3: Product Rating
+  let product_rating_container = document.createElement('div');
+  product_rating_container.className = 'product-rating-container';
+
+  let product_rating_stars = document.createElement('img');
+  let str = product.rating.stars.toString(); // Ensure it's a string
+  let newStr = str.includes('.') ? str.replace('.', '') : str + '0'; // Handle decimal case
+  product_rating_stars.src = `images/ratings/rating-${newStr}.png`;
+  product_rating_stars.alt = `Rating: ${product.rating.stars}`;
+  product_rating_stars.className = 'product-rating-stars'; // Add class for styling
+
+  let product_rating_count = document.createElement('div');
+  product_rating_count.className = 'product-rating-count link-primary';
+  product_rating_count.innerHTML = `${product.rating.count}`; // Rating count
+
+  product_rating_container.appendChild(product_rating_stars);
+  product_rating_container.appendChild(product_rating_count);
+
+  // Div4: Product Price
+  let product_price = document.createElement('div');
+  product_price.className = 'product-price';
+  product_price.innerHTML = `$${(product.priceCents / 100).toFixed(2)}`; // Convert price from cents
+
+  // Div5: Product Quantity Selector
+  let product_quantity_container = document.createElement('div');
+  product_quantity_container.className = 'product-quantity-container';
+
+  let product_quantity_label = document.createElement('label');
+  product_quantity_label.innerHTML = 'Quantity: ';
+  product_quantity_label.setAttribute('for', `quantity-${i}`); // Use index i for unique IDs
+
+  let product_quantity_select = document.createElement('select');
+  product_quantity_select.id = `quantity-${i}`;
+  product_quantity_select.className = "product-quantity-select";
+
+  // Add options for quantity (1-10)
+  for (let j = 1; j <= 10; j++) {
+    let option = document.createElement('option');
+    option.value = j;
+    option.text = j;
+    product_quantity_select.appendChild(option);
+  }
+
+  product_quantity_container.appendChild(product_quantity_label);
+  product_quantity_container.appendChild(product_quantity_select);
+
+  // Div6: Spacer
+  let product_spacer = document.createElement('div');
+  product_spacer.className = 'product-spacer';
+
+  // Div7: Added to Cart Indicator
+  let add_to_cart = document.createElement('div');
+  add_to_cart.className = 'added-to-cart';
+  add_to_cart.style.display = 'none'; // Initially hidden
+
+  let checkmark = document.createElement('img');
+  checkmark.src = `images/icons/checkmark.png`;
+  checkmark.alt = 'Checkmark';
+
+  add_to_cart.appendChild(checkmark);
+  add_to_cart.appendChild(document.createTextNode('Added'));
+
+  // Add to Cart Button
+  let add_to_cart_button = document.createElement('button');
+  add_to_cart_button.className = 'add-to-cart-button button-primary';
+  add_to_cart_button.innerHTML = 'Add to Cart';
+
+  // Button Click Event to Show "Added"
+  add_to_cart_button.addEventListener('click', () => {
+    add_to_cart.style.display = 'block'; // Show "Added" message on click
+  });
+
+  // Append all components to the product container
+  product_container.appendChild(product_image_container);
+  product_container.appendChild(product_name);
+  product_container.appendChild(product_rating_container);
+  product_container.appendChild(product_price);
+  product_container.appendChild(product_quantity_container);
+  product_container.appendChild(product_spacer);
+  product_container.appendChild(add_to_cart_button);
+  product_container.appendChild(add_to_cart);
+
+  // Append product container to the grid
+  products_grid.appendChild(product_container);
+});
+
