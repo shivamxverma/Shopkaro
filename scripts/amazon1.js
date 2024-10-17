@@ -767,3 +767,10 @@ products.forEach((product, i) => {
   products_grid.appendChild(product_container);
 });
 
+
+document.querySelector('.products-grid').addEventListener('click', (event) => {
+  if (event.target.classList.contains('js-add-to-cart')) {
+   const ele =  document.querySelector('.js-added-to-cart');
+   document.querySelector('.js-added-to-cart').innerHTML = 'Added';
+  }
+});
