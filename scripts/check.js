@@ -1,10 +1,18 @@
-import { cart } from '../data/cart.js';
-import { products } from '../data/products.js';
+import { cart , removefromCart} from "../data/cart.js";
+import { products } from "../data/products.js";
+import { formatCurrency } from "./utils/money.js";
 
+ShowCart();
 
-console.log(cart.length);
-let parenthtml = '';
-cart.forEach(() => {
+function ShowCart() {
+  let parenthtml = "";
+  cart.forEach((cartItem) => {
+    let productItem;
+    products.forEach((product) => {
+      if (cartItem.productId === product.id) {
+        productItem = product;
+      }
+    });
     parenthtml += `
       <div class="cart-item-container">
             <div class="delivery-date">
@@ -13,23 +21,27 @@ cart.forEach(() => {
 
             <div class="cart-item-details-grid">
               <img class="product-image"
-                src="images/products/athletic-cotton-socks-6-pairs.jpg">
+                src="${productItem.image}">
 
               <div class="cart-item-details">
                 <div class="product-name">
-                  Black and Gray Athletic Cotton Socks - 6 Pairs
+                  ${productItem.name}
                 </div>
                 <div class="product-price">
-                  $10.90
+                  ${formatCurrency(productItem.priceCents)}
                 </div>
                 <div class="product-quantity">
                   <span>
-                    Quantity: <span class="quantity-label">2</span>
+                    Quantity: <span class="quantity-label">${
+                      cartItem.quantity
+                    }</span>
                   </span>
                   <span class="update-quantity-link link-primary">
                     Update
                   </span>
-                  <span class="delete-quantity-link link-primary">
+                  <span class="delete-quantity-link link-primary
+                  js-delete-link"
+                  data-product-Id=${productItem.id}>
                     Delete
                   </span>
                 </div>
@@ -42,7 +54,7 @@ cart.forEach(() => {
                 <div class="delivery-option">
                   <input type="radio" checked
                     class="delivery-option-input"
-                    name="delivery-option-1">
+                    name="delivery-option-${productItem.id}">
                   <div>
                     <div class="delivery-option-date">
                       Tuesday, June 21
@@ -55,7 +67,7 @@ cart.forEach(() => {
                 <div class="delivery-option">
                   <input type="radio"
                     class="delivery-option-input"
-                    name="delivery-option-1">
+                    name="delivery-option-${productItem.id}">
                   <div>
                     <div class="delivery-option-date">
                       Wednesday, June 15
@@ -68,7 +80,7 @@ cart.forEach(() => {
                 <div class="delivery-option">
                   <input type="radio"
                     class="delivery-option-input"
-                    name="delivery-option-1">
+                    name="delivery-option-${productItem.id}">
                   <div>
                     <div class="delivery-option-date">
                       Monday, June 13
@@ -82,9 +94,14 @@ cart.forEach(() => {
             </div>
       </div>
     `;
-})
+  });
+  document.querySelector(".order-summary").innerHTML = parenthtml;
+}
 
-document.querySelector('.order-summary').innerHTML = parenthtml;
-
-
-// console.log('main yha hoon na bhai');
+document.querySelectorAll(".js-delete-link").forEach((link) => {
+  link.addEventListener("click", () => {
+    const productId = link.dataset.productId;
+    removefromCart(productId);
+    ShowCart();
+  });
+});
