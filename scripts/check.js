@@ -1,8 +1,7 @@
 import { cart, removefromCart , CartCount , addtocart } from "../data/cart.js";
 import { products } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
-import { DeliveryOption } from '..data/DeliveryOption.js';
-
+import { DeliveryOption } from '../data/DeliveryOption.js';
 
 dayjs();
 
@@ -16,8 +15,7 @@ cart.forEach((cartItem) => {
   });
   parenthtml += `
       <div class="cart-item-container js-cart-item-container-${cartItem.productId}">
-            <div class="delivery-date">
-              Delivery date: Tuesday, June 21
+            <div class="delivery-date-${productItem.id}">
             </div>
 
             <div class="cart-item-details-grid">
@@ -50,7 +48,8 @@ cart.forEach((cartItem) => {
                 </div>
               </div>
 
-              <div class="delivery-options">
+              <div class="delivery-options js-delivery-options
+              " data-product-Id=${productItem.id}>
                 <div class="delivery-options-title">
                   Choose a delivery option:
                 </div>
@@ -101,33 +100,33 @@ document.querySelectorAll('.js-update-link').forEach((link) => {
 
 document.querySelector('.return-to-home-link').innerHTML = `${CartCount} items`
 
-let html = '';
 
-DeliveryOption.forEach((DeliveryItem)=>{
+document.querySelectorAll('.js-delivery-options').forEach((element) => {
+
+  const productId = element.dataset.productId;
+  let html = '';
+  DeliveryOption.forEach((DeliveryItem) => {
     const today = dayjs();
-    const DeliveryDate = today.add(
-      DeliveryItem.DeliveryDays,
-      'days'
-    );
-    const datestring = DeliveryDate.format(
-      'dddd MMMM D'
-    );
-    const pricestring = DeliveryItem.priceCents === 0 ? 'FREE':formatCurrency(DeliveryItem.priceCents);
+    const DeliveryDate = today.add(DeliveryItem.DeliveryDays, 'days');
+    const datestring = DeliveryDate.format('dddd MMMM D');
+    const pricestring = DeliveryItem.PriceCents === 0 ? 'FREE' : formatCurrency(DeliveryItem.PriceCents);
     
     html += `<div class="delivery-option">
-      <input type="radio" checked
-        class="delivery-option-input"
-        name="delivery-option-${productItem.id}">
-      <div>
-        <div class="delivery-option-date">
+          <input type="radio" checked
+          class="delivery-option-input js-delivery-option-input"
+          name="delivery-option-${productId}">
+          <div>
+          <div class="delivery-option-date">
           ${datestring}
-        </div>
-        <div class="delivery-option-price">
+          </div>
+          <div class="delivery-option-price">
           ${pricestring}
-        </div>
-      </div>
-    </div>
-    `;
-})
-
-document.querySelector('.delivery-options').innerHTML += html;
+          </div>
+          </div>
+        </div>`;
+  });
+  const selectedOption = document.querySelector('.js-delivery-option-input:checked');
+  const selectedOptionValue = selectedOption ? selectedOption.value : null;
+  document.querySelector(`.delivery-date-${productId}`).innerHTML = `Delivery Date: ${selectedOptionValue}`;
+  element.innerHTML += html;
+});

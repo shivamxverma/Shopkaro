@@ -6,5 +6,5 @@ export const DeliveryOption = [{
     id : '2',
     DeliveryDays : 3,
     PriceCents : 499
-}]
+}];
 
