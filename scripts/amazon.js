@@ -58,9 +58,10 @@ document.querySelector(".js-cart-quantity").innerHTML = CartCount;
 document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   button.addEventListener("click", () => {
     const productId = button.dataset.productId;
-    const selectQuantity = document.querySelector(`.js-product-quantity-container-${productId}`);
-    const Quantity = parseInt(selectQuantity.value);
-    console.log(Quantity);
+    
+    // const selectQuantity = document.querySelector(`.js-product-quantity-container-${productId}`);
+    // const Quantity = parseInt(selectQuantity.value);
+    // console.log(Quantity);
     addtocart(productId);
     updateCartQuantity();
   });
